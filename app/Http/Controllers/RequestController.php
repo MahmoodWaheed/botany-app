@@ -91,7 +91,7 @@ class RequestController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $user_id, $slide_id)
+    public function update(Request $request, $user_id, $slide_id)   // chick if returnd state == true cnt ++ 
     {
         $validatedData = $request->validate([   //method to validate the input data. This ensures that the data is in the correct format and meets any validation rules set for each field.
             'start_date' => 'date',
