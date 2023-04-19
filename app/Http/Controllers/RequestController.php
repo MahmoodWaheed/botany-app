@@ -17,7 +17,7 @@ class RequestController extends Controller
         $requests = DB::table('requests')
             ->join('users', 'users.id', '=', 'requests.user_id')
             ->join('slides', 'slides.id', '=', 'requests.slide_id')
-            ->select('requests.user_id', 'requests.slide_id', 'users.name as user_name', 'slides.arabic_name as slide_name', 'requests.start_date', 'requests.end_date', 'requests.returned_date', 'requests.notes', 'requests.returned_state', 'requests.request_state', 'requests.requested_at', 'requests.updated_at')
+            ->select('requests.user_id', 'requests.slide_id', 'users.name as user_name', 'slides.arabicName as slide_name', 'requests.start_date', 'requests.end_date', 'requests.returned_date', 'requests.notes', 'requests.returned_state', 'requests.request_state', 'requests.requested_at', 'requests.updated_at')
             ->get();
 
         return response()->json($requests);
@@ -44,7 +44,7 @@ class RequestController extends Controller
         $request = DB::table('requests')
             ->join('users', 'users.id', '=', 'requests.user_id')
             ->join('slides', 'slides.id', '=', 'requests.slide_id')
-            ->select('users.name as user_name', 'slides.arabic_name as slide_name', 'requests.start_date', 'requests.end_date', 'requests.returned_date', 'requests.notes', 'requests.returned_state', 'requests.request_state', 'requests.requested_at', 'requests.updated_at')
+            ->select('users.name as user_name', 'slides.arabicName as slide_name', 'requests.start_date', 'requests.end_date', 'requests.returned_date', 'requests.notes', 'requests.returned_state', 'requests.request_state', 'requests.requested_at', 'requests.updated_at')
             ->where([
                 ['requests.user_id', '=', $validatedData['user_id']],
                 ['requests.slide_id', '=', $validatedData['slide_id']],
@@ -72,7 +72,7 @@ class RequestController extends Controller
         $request = DB::table('requests')
             ->join('users', 'users.id', '=', 'requests.user_id')
             ->join('slides', 'slides.id', '=', 'requests.slide_id')
-            ->select('requests.id', 'users.name as user_name', 'slides.arabic_name as slide_name', 'requests.start_date', 'requests.end_date', 'requests.returnd_date', 'requests.notes', 'requests.returned_state', 'requests.request_state', 'requests.requested_at', 'requests.updated_at')
+            ->select('requests.id', 'users.name as user_name', 'slides.arabicName as slide_name', 'requests.start_date', 'requests.end_date', 'requests.returnd_date', 'requests.notes', 'requests.returned_state', 'requests.request_state', 'requests.requested_at', 'requests.updated_at')
             ->where('requests.user_id', $validatedData['user_id'])
             ->where('requests.slide_id', $validatedData['slide_id'])
             ->first();
