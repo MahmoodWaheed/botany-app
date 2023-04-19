@@ -17,7 +17,7 @@ class RequestController extends Controller
         $requests = DB::table('requests')
             ->join('users', 'users.id', '=', 'requests.user_id')
             ->join('slides', 'slides.id', '=', 'requests.slide_id')
-            ->select('requests.user_id','requests.slide_id', 'users.name as user_name', 'slides.arabic_name as slide_name', 'requests.start_date', 'requests.end_date', 'requests.returnd_date', 'requests.notes', 'requests.returned_state', 'requests.request_state', 'requests.requested_at', 'requests.updated_at')
+            ->select('requests.user_id', 'requests.slide_id', 'users.name as user_name', 'slides.arabic_name as slide_name', 'requests.start_date', 'requests.end_date', 'requests.returned_date', 'requests.notes', 'requests.returned_state', 'requests.request_state', 'requests.requested_at', 'requests.updated_at')
             ->get();
 
         return response()->json($requests);
@@ -38,13 +38,13 @@ class RequestController extends Controller
             'end_date' => 'required|date',
             'notes' => 'nullable|string',
         ]);
-    
+
         DB::table('requests')->insert($validatedData);
-    
+
         $request = DB::table('requests')
             ->join('users', 'users.id', '=', 'requests.user_id')
             ->join('slides', 'slides.id', '=', 'requests.slide_id')
-            ->select('users.name as user_name', 'slides.arabic_name as slide_name', 'requests.start_date', 'requests.end_date', 'requests.returnd_date', 'requests.notes', 'requests.returned_state', 'requests.request_state', 'requests.requested_at', 'requests.updated_at')
+            ->select('users.name as user_name', 'slides.arabic_name as slide_name', 'requests.start_date', 'requests.end_date', 'requests.returned_date', 'requests.notes', 'requests.returned_state', 'requests.request_state', 'requests.requested_at', 'requests.updated_at')
             ->where([
                 ['requests.user_id', '=', $validatedData['user_id']],
                 ['requests.slide_id', '=', $validatedData['slide_id']],
@@ -52,7 +52,7 @@ class RequestController extends Controller
                 ['requests.end_date', '=', $validatedData['end_date']],
             ])
             ->first();
-    
+
         return response()->json($request, 201);
     }
 
@@ -68,7 +68,7 @@ class RequestController extends Controller
             'user_id' => 'required|integer',
             'slide_id' => 'required|integer',
         ]);
-    
+
         $request = DB::table('requests')
             ->join('users', 'users.id', '=', 'requests.user_id')
             ->join('slides', 'slides.id', '=', 'requests.slide_id')
@@ -76,11 +76,11 @@ class RequestController extends Controller
             ->where('requests.user_id', $validatedData['user_id'])
             ->where('requests.slide_id', $validatedData['slide_id'])
             ->first();
-    
+
         if (!$request) {
             return response()->json(['message' => 'Request not found'], 404);
         }
-    
+
         return response()->json($request);
     }
 
@@ -101,17 +101,17 @@ class RequestController extends Controller
             'returned_date' => 'nullable|date',
             'request_state' => 'nullable|boolean',
         ]);
-    
+
         $updateQuery = DB::table('requests')
             ->where('user_id', $user_id)
             ->where('slide_id', $slide_id);
-    
+
         foreach ($validatedData as $field => $value) {
             $updateQuery->when($value !== null, function ($query) use ($field, $value) {
                 return $query->update([$field => $value]);
             });
         }
-    
+
         $updatedRequest = DB::table('requests')   //After all fields have been updated, the function retrieves the updated request from the database
             ->join('users', 'users.id', '=', 'requests.user_id')
             ->join('slides', 'slides.id', '=', 'requests.slide_id')
@@ -119,7 +119,7 @@ class RequestController extends Controller
             ->where('requests.user_id', $user_id)
             ->where('requests.slide_id', $slide_id)
             ->first();
-    
+
         return response()->json($updatedRequest);  // the function returns the updated request as a JSON response.
     }
 
@@ -131,11 +131,36 @@ class RequestController extends Controller
      */
     public function destroy($user_id, $slide_id)
     {
-        DB::table('requests')
+        $request = DB::table('requests')
             ->where('user_id', $user_id)
             ->where('slide_id', $slide_id)
-            ->delete();
-    
-        return response()->json(['message' => 'Request deleted successfully.']);
+            ->first();
+
+        if ($request) {
+            // Insert the request into the request_archives table
+            DB::table('request_archives')->insert([
+                'user_id' => $request->user_id,
+                'slide_id' => $request->slide_id,
+                'start_date' => $request->start_date,
+                'end_date' => $request->end_date,
+                'notes' => $request->notes,
+                'returned_state' => $request->returned_state,
+                'returned_date' => $request->returned_date,
+                'request_state' => $request->request_state,
+                'requested_at' => $request->requested_at,
+                'updated_at' => $request->updated_at,
+                'deleted_at' => now(),
+            ]);
+
+            // Delete the request from the requests table
+            DB::table('requests')
+                ->where('user_id', $user_id)
+                ->where('slide_id', $slide_id)
+                ->delete();
+
+            return response()->json(['message' => 'Request archived successfully.']);
+        } else {
+            return response()->json(['error' => 'Request not found.'], 404);
+        }
     }
 }
