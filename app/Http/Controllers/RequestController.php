@@ -99,7 +99,7 @@ class RequestController extends Controller
             'notes' => 'nullable|string',
             'returned_state' => 'nullable|boolean',
             'returned_date' => 'nullable|date',
-            'request_state' => 'nullable|boolean',
+            'request_state' => 'nullable|string|in:approved,rejected',
         ]);
 
         $updateQuery = DB::table('requests')
