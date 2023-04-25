@@ -24,7 +24,8 @@ class User extends Authenticatable
         'phone',
         'type',
         'ssn',
-        'blocked'
+        'blocked',
+        'id'
     ];
 
     /**

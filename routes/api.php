@@ -24,5 +24,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::apiResource('users',UserController::class);
 Route::apiResource('slides',SlideController::class);
 Route::resource('requests', RequestController::class);
-
-
+Route::get('TotalUsers', [UserController::class, 'countUsers']);
