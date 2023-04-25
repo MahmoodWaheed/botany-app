@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 24, 2023 at 01:14 AM
+-- Generation Time: Apr 25, 2023 at 06:15 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.1.12
 
@@ -63,7 +63,7 @@ CREATE TABLE `others` (
 --
 
 CREATE TABLE `requests` (
-  `user_id` int(11) NOT NULL,
+  `user_id` int(20) NOT NULL,
   `slide_id` int(11) NOT NULL,
   `start_date` date DEFAULT NULL,
   `end_date` date DEFAULT NULL,
@@ -83,7 +83,7 @@ CREATE TABLE `requests` (
 
 CREATE TABLE `request_archives` (
   `slides_id` int(11) NOT NULL,
-  `users_id` int(11) NOT NULL,
+  `users_id` int(20) NOT NULL,
   `start_date` date DEFAULT NULL,
   `end_date` date DEFAULT NULL,
   `returned_date` date DEFAULT NULL,
@@ -173,17 +173,24 @@ CREATE TABLE `special_groups` (
 --
 
 CREATE TABLE `users` (
-  `id` int(11) NOT NULL,
+  `id` int(20) NOT NULL,
   `name` varchar(45) NOT NULL,
   `password` varchar(45) NOT NULL,
   `email` varchar(45) NOT NULL,
   `phone` varchar(45) NOT NULL,
   `type` varchar(45) NOT NULL,
-  `ssn` varchar(45) DEFAULT NULL,
+  `ssn` varchar(45) NOT NULL,
   `blocked` tinyint(4) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `name`, `password`, `email`, `phone`, `type`, `ssn`, `blocked`, `created_at`, `updated_at`) VALUES
+(111111, 'Mahmoud Waheed Mohamed', '9517538246wef', 'mahmoud.waheed.2moh@gmaila.com', '01092054452', 'student', '301042221044962', NULL, '2023-04-25 02:00:21', '2023-04-25 02:00:21');
 
 -- --------------------------------------------------------
 
@@ -193,7 +200,7 @@ CREATE TABLE `users` (
 
 CREATE TABLE `user_favorites` (
   `slides_id` int(11) NOT NULL,
-  `users_id` int(11) NOT NULL
+  `users_id` int(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -308,7 +315,7 @@ ALTER TABLE `slides`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=111112;
 
 --
 -- Constraints for dumped tables
