@@ -23,20 +23,6 @@ class RequestController extends Controller
         $requests = DB::table('requests')
         ->join('users', 'requests.user_id', '=', 'users.id')
         ->join('slides', 'requests.slide_id', '=', 'slides.id')
-        ->select(
-            'requests.user_id',
-            'requests.slide_id',
-            'users.name as user_name',
-            'users.email as user_email',
-            'slides.arabicName as slide_arabic_name',
-            'slides.english_name as slide_english_name',
-            'requests.start_date',
-            'requests.end_date',
-            'requests.returnd_date',
-            'requests.notes',
-            'requests.returned_state',
-            'requests.request_state'
-        )
         ->get();
 
         return response()->json([
@@ -58,7 +44,7 @@ class RequestController extends Controller
             'slide_id' => 'required|integer',
             'start_date' => 'required|date',
             'end_date' => 'required|date',
-            'returnd_date' => 'nullable|date',
+            'returned_date' => 'nullable|date',
             'notes' => 'nullable|string|max:255',
             'returned_state' => 'nullable|boolean',
             'request_state' => 'nullable|string|max:45'
@@ -66,7 +52,7 @@ class RequestController extends Controller
 
         DB::table('requests')->insert($validatedData);
 
-        $request = DB::table('requests')
+        $request2 = DB::table('requests')
             ->join('users', 'users.id', '=', 'requests.user_id')
             ->join('slides', 'slides.id', '=', 'requests.slide_id')
             ->select('users.name as user_name', 'slides.arabicName as slide_name', 'requests.start_date', 'requests.end_date', 'requests.returned_date', 'requests.notes', 'requests.returned_state', 'requests.request_state', 'requests.requested_at', 'requests.updated_at')
@@ -78,11 +64,12 @@ class RequestController extends Controller
             ])
             ->first();
 
-            $user = DB::table('users')->where('id', $validatedData['user_id'])->first();
-            $slide = DB::table('slides')->where('id', $validatedData['slide_id'])->first();
-    
-            Mail::to($user->email)->send(new RequestReceived($user, $slide));  // Send email to user 
-        return response()->json($request, 201);
+        $user = DB::table('users')->where('id', $validatedData['user_id'])->first();
+        $slide = DB::table('slides')->where('id', $validatedData['slide_id'])->first();
+
+       Mail::to($user->email)->send(new RequestReceived($user, $slide));  // Send email to user 
+
+        return response()->json($request2, 201);
     }
 
 

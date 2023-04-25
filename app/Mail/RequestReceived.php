@@ -41,10 +41,17 @@ class RequestReceived extends Mailable
     }
 
 
-    public function build()
+    // public function build()
+    // {
+    //     return $this->markdown('emails.request-received')
+    //                 ->subject('Your request has been received');
+    // }
+
+    public function content()
     {
-        return $this->markdown('emails.request-received')
-                    ->subject('Your request has been received');
+        return new Content(
+            markdown: 'emails.request-received',
+        );
     }
 
 

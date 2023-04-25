@@ -16,23 +16,24 @@ class SlideController extends Controller
     {
         $group_name = request()->group_name;
 
-        if ($group_name=='Special groups'){
+        if ($group_name) {
+            if ($group_name=='Special groups'){
+                return response()->json([
+                    'payload' => DB::table('slides')
+                        ->join('special_groups', 'slides.id', '=', 'special_groups.id')
+                        ->select('slides.*', 'special_groups.specimen')
+                        ->where('slides.group_name', '=', $group_name)
+                        ->get()
+                ]);
+            }
+
+            
             return response()->json([
-                'payload' => DB::table('slides')
-                    ->join('special_groups', 'slides.id', '=', 'special_groups.id')
-                    ->select('slides.*', 'special_groups.specimen')
-                    ->where('slides.group_name', '=', $group_name)
-                    ->get()
-            ]);
-        }
-        elseif(($group_name=='Phycology')||($group_name=='Archegoniate')||($group_name=='Gymnosperm')||($group_name=='Monocotyledon')||($group_name=='Dicotyledon')||($group_name=='Fossil')){
-            return response()->json([
-                'payload' => DB::table('slides')
-                    ->join('others', 'slides.id', '=', 'others.id')
+                'payload' => DB::table('others')
+                    ->join('slides', 'slides.id', '=', 'others.id')
                     ->join('section_types', 'others.id', '=', 'section_types.other_id')
                     ->where('slides.group_name', '=', $group_name)
                     ->get()
-
             ]);
         }
 
