@@ -13,6 +13,10 @@ class RequestRejected extends Mailable
 {
     use Queueable, SerializesModels;
 
+
+    public $user;
+    public $slide;
+
     /**
      * Create a new message instance.
      *

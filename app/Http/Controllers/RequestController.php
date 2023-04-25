@@ -149,19 +149,58 @@ class RequestController extends Controller
 
             $currentRequestState = $updatedRequest->request_state;
 
-            // send email if request is rejected
-            if ($currentRequestState === 'reject') {
-                $user = User::findOrFail($user_id);
-                Mail::to($user->email)->send(new RequestRejected($updatedRequest));
-            }
+            // // send email if request is rejected
+            // if ($currentRequestState === 'reject') {
+            //     $user = User::findOrFail($user_id);
+            //     Mail::to($user->email)->send(new RequestRejected($updatedRequest));
+            // }
         
-            // send email if request is accepted
-            if ($currentRequestState === 'accept') {
-                $user = User::findOrFail($user_id);
-                Mail::to($user->email)->send(new RequestAccepted($updatedRequest));
-            }
+            // // send email if request is accepted
+            // if ($currentRequestState === 'accept') {
+            //     $user = User::findOrFail($user_id);
+            //     Mail::to($user->email)->send(new RequestAccepted($updatedRequest));
+            // }
 
         return response()->json($updatedRequest);  // the function returns the updated request as a JSON response.
+    }
+
+    public function acceptRequest(Request $request, $user_id, $slide_id){
+        
+
+        $requestData = DB::table('requests')
+            ->where('user_id', $user_id)
+            ->where('slide_id', $slide_id)
+            ->first();
+
+        // update the request again 
+        $updateQuery = DB::table('requests')
+            ->where('user_id', $user_id)
+            ->where('slide_id', $slide_id)
+            ->update(['request_state'=>'approved']);
+
+            // send email if request is accepted
+            $user = User::findOrFail($user_id);
+            Mail::to($user->email)->send(new RequestAccepted($requestData->user_id,$requestData->slide_id));
+
+    }
+
+    public function rejectRequest(Request $request, $user_id, $slide_id){
+ 
+        // update the request again 
+        $requestData = DB::table('requests')
+            ->where('user_id', $user_id)
+            ->where('slide_id', $slide_id)
+            ->first();
+
+        $updateQuery = DB::table('requests')
+            ->where('user_id', $user_id)
+            ->where('slide_id', $slide_id)
+            ->update(['request_state'=>'reject']);
+
+            // send email if request is rejected
+            $user = User::findOrFail($user_id);
+            Mail::to($user->email)->send(new RequestRejected($requestData->user_id,$requestData->slide_id));
+        
     }
 
     /**
