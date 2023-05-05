@@ -187,8 +187,10 @@ class RequestController extends Controller
 
     }
 
-    public function rejectRequest(Request $request, $user_id, $slide_id){
+    public function rejectRequest(Request $request){
  
+        $user_id = request()->user_id;
+        $slide_id = request()->slide_id;
         // update the request again 
         $requestData = DB::table('requests')
             ->where('user_id', $user_id)
@@ -202,7 +204,7 @@ class RequestController extends Controller
 
             // send email if request is rejected
             $user = User::findOrFail($user_id);
-            Mail::to($user->email)->send(new RequestRejected($requestData->user_id,$requestData->slide_id));
+            Mail::to($user->email)->send(new RequestRejected($user_id,$slide_id));
         
     }
 

@@ -8,6 +8,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\DB;
 
 class RequestRejected extends Mailable
 {
@@ -22,12 +23,11 @@ class RequestRejected extends Mailable
      *
      * @return void
      */
-    public function __construct($user, $slide)
+    public function __construct($user_id, $slide_id)
     {
-        $this->user = $user;
-        $this->slide = $slide;
+        $this->user = DB::table('users')->find($user_id);
+        $this->slide = DB::table('slides')->find($slide_id);
     }
-
     /**
      * Get the message envelope.
      *
