@@ -19,7 +19,7 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')->hourly();
 
         // run our job every day 
-        $schedule->job(new SendRemainderBeforDeadlineJob)->daily();
+       // $schedule->job(new SendRemainderBeforDeadlineJob)->dailyAt('08:00');
     }
 
     /**

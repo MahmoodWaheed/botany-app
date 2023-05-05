@@ -20,19 +20,27 @@ class SlideController extends Controller
             if ($group_name=='Special groups'){
                 return response()->json([
                     'payload' => DB::table('slides')
+                        ->where('slides.group_name', 'Special groups')
                         ->join('special_groups', 'slides.id', '=', 'special_groups.id')
-                        ->select('slides.*', 'special_groups.specimen')
-                        ->where('slides.group_name', '=', $group_name)
+                        ->join('slide_box_numbers', 'slide_box_numbers.slide_id', '=', 'slides.id')
+                        ->join('box_number', 'slide_box_numbers.box_number_id', '=', 'box_number.id')
+                        ->join('slide_slide_ceils', 'slide_slide_ceils.slide_id', '=', 'slides.id')
+                        ->join('slide_ceils', 'slide_slide_ceils.slide_ceils_id', '=', 'slide_ceils.id')
+                        ->select('slides.*', 'special_groups.specimen','box_number.box-number','slide_ceils.ceil_name')
                         ->get()
                 ]);
             }
 
-            
             return response()->json([
                 'payload' => DB::table('others')
+                    ->where('slides.group_name', '=', $group_name)
                     ->join('slides', 'slides.id', '=', 'others.id')
                     ->join('section_types', 'others.id', '=', 'section_types.other_id')
-                    ->where('slides.group_name', '=', $group_name)
+                    ->join('slide_box_numbers', 'slide_box_numbers.slide_id', '=', 'slides.id')
+                    ->join('box_number', 'slide_box_numbers.box_number_id', '=', 'box_number.id')
+                    ->join('slide_slide_ceils', 'slide_slide_ceils.slide_id', '=', 'slides.id')
+                    ->join('slide_ceils', 'slide_slide_ceils.slide_ceils_id', '=', 'slide_ceils.id')
+                    ->select('slides.*', 'section_types.SectionType','box_number.box-number','slide_ceils.ceil_name','others.family','others.latine_name')
                     ->get()
             ]);
         }

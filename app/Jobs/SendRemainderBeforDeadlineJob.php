@@ -31,6 +31,23 @@ class SendRemainderBeforDeadlineJob implements ShouldQueue
      */
     public function handle()
     {
-        User::factory()->create();
+        //User::factory()->create();
+
+        // $updatedRequest = DB::table('requests')
+        // ->where('user_id', $user_id)
+        // ->where('slide_id', $slide_id)
+        // ->first();
+
+        // if ($updatedRequest->request_state === 'approved') {
+        //     $endDate = $updatedRequest->end_date;
+        //     if (Carbon::now()->greaterThan($endDate)) {
+        //         DB::table('users')
+        //         ->where('id', $user_id)
+        //             ->update(['blocked' => true]);
+        //     }
+        // }
+
+
+
     }
 }

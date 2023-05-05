@@ -23,6 +23,7 @@ class RequestController extends Controller
         $requests = DB::table('requests')
         ->join('users', 'requests.user_id', '=', 'users.id')
         ->join('slides', 'requests.slide_id', '=', 'slides.id')
+        ->select('users.id','users.email','users.name','slides.arabicName','slides.english_name','requests.requested_at','requests.updated_at','requests.end_date')
         ->get();
 
         return response()->json([
@@ -164,23 +165,25 @@ class RequestController extends Controller
         return response()->json($updatedRequest);  // the function returns the updated request as a JSON response.
     }
 
-    public function acceptRequest(Request $request, $user_id, $slide_id){
+    public function acceptRequest(Request $request){
         
-
+        // dd($user_id,$slide_id);
+        $user_id = request()->user_id;
+        $slide_id = request()->slide_id;
         $requestData = DB::table('requests')
-            ->where('user_id', $user_id)
-            ->where('slide_id', $slide_id)
+            ->where('requests.user_id','=', $user_id)
+            ->where('requests.slide_id','=', $slide_id)
             ->first();
 
         // update the request again 
         $updateQuery = DB::table('requests')
-            ->where('user_id', $user_id)
-            ->where('slide_id', $slide_id)
-            ->update(['request_state'=>'approved']);
+            ->where('requests.user_id','=', $user_id)
+            ->where('requests.slide_id','=', $slide_id)
+            ->update(['requests.request_state'=>'approved']);
 
             // send email if request is accepted
             $user = User::findOrFail($user_id);
-            Mail::to($user->email)->send(new RequestAccepted($requestData->user_id,$requestData->slide_id));
+            Mail::to($user->email)->send(new RequestAccepted($user_id,$slide_id));
 
     }
 
