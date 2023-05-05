@@ -148,6 +148,16 @@ class RequestController extends Controller
             ->where('requests.slide_id', $slide_id)
             ->first();
 
+        // Update slide count based on returned_state value
+        $slide = DB::table('slides')->where('id', $slide_id)->first();
+
+        if ($updatedRequest->returned_state) {
+            DB::table('slides')->where('id', $slide_id)->update(['cont' => $slide->cont + 1]);
+        } else {
+            DB::table('slides')->where('id', $slide_id)->update(['cont' => $slide->cont - 1]);
+        }
+        
+
             $currentRequestState = $updatedRequest->request_state;
 
             // // send email if request is rejected
@@ -179,7 +189,7 @@ class RequestController extends Controller
         $updateQuery = DB::table('requests')
             ->where('requests.user_id','=', $user_id)
             ->where('requests.slide_id','=', $slide_id)
-            ->update(['requests.request_state'=>'approved']);
+            ->update(['requests.request_state'=>'approved','updated_at'=>now()]);
 
             // send email if request is accepted
             $user = User::findOrFail($user_id);
@@ -200,11 +210,12 @@ class RequestController extends Controller
         $updateQuery = DB::table('requests')
             ->where('user_id', $user_id)
             ->where('slide_id', $slide_id)
-            ->update(['request_state'=>'reject']);
+            ->update(['request_state'=>'reject','updated_at'=>now()]);
 
             // send email if request is rejected
             $user = User::findOrFail($user_id);
             Mail::to($user->email)->send(new RequestRejected($user_id,$slide_id));
+            // destroy($user_id, $slide_id);  i need to call the destroy function 
         
     }
 
