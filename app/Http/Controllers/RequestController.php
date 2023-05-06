@@ -215,7 +215,7 @@ class RequestController extends Controller
             // send email if request is rejected
             $user = User::findOrFail($user_id);
             Mail::to($user->email)->send(new RequestRejected($user_id,$slide_id));
-            // destroy($user_id, $slide_id);  i need to call the destroy function 
+            $this->destroy($user_id, $slide_id);  //i need to call the destroy function 
         
     }
 
