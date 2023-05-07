@@ -235,8 +235,8 @@ class RequestController extends Controller
         if ($request) {
             // Insert the request into the request_archives table
             $archived = DB::table('request_archives')->insert([
-                'user_id' => $request->user_id,
-                'slide_id' => $request->slide_id,
+                'users_id' => $request->user_id,
+                'slides_id' => $request->slide_id,
                 'start_date' => $request->start_date,
                 'end_date' => $request->end_date,
                 'notes' => $request->notes,
