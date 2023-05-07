@@ -23,7 +23,7 @@ class RequestController extends Controller
         $requests = DB::table('requests')
         ->join('users', 'requests.user_id', '=', 'users.id')
         ->join('slides', 'requests.slide_id', '=', 'slides.id')
-        ->select('users.id','users.email','users.name','slides.arabicName','slides.english_name','requests.requested_at','requests.updated_at','requests.end_date')
+        ->select('users.id','users.email','users.name','slides.arabicName','slides.english_name','requests.requested_at','requests.updated_at','requests.end_date','requests.slide_id')
         ->get();
 
         return response()->json([
