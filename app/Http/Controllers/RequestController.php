@@ -23,7 +23,10 @@ class RequestController extends Controller
         $requests = DB::table('requests')
         ->join('users', 'requests.user_id', '=', 'users.id')
         ->join('slides', 'requests.slide_id', '=', 'slides.id')
-        ->select('users.id','users.email','users.name','slides.arabicName','slides.english_name','requests.requested_at','requests.updated_at','requests.end_date','requests.slide_id')
+        ->select('users.id','users.email','users.name','slides.arabicName',
+                'slides.english_name','requests.requested_at','requests.updated_at',
+                'requests.end_date','requests.slide_id','requests.returned_state',
+                'requests.returned_date','requests.start_date')
         ->get();
 
         return response()->json([
@@ -127,7 +130,7 @@ class RequestController extends Controller
             'returned_date' => 'nullable|date',
             'notes' => 'nullable|string|max:255',
             'returned_state' => 'nullable|boolean',
-            'request_state' => 'nullable|string|max:45'
+            /*'request_state' => 'nullable|string|max:45'*/
         ]);
 
         $updateQuery = DB::table('requests')
@@ -176,7 +179,7 @@ class RequestController extends Controller
     }
 
     public function acceptRequest(Request $request){
-        
+               
         // dd($user_id,$slide_id);
         $user_id = request()->user_id;
         $slide_id = request()->slide_id;
