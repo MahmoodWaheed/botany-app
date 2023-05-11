@@ -27,3 +27,4 @@ Route::resource('requests', RequestController::class);
 Route::get('TotalUsers', [UserController::class, 'countUsers']);
 Route::put('accept_request',[RequestController::class,'acceptRequest']);
 Route::put('reject_request',[RequestController::class,'rejectRequest']);
+Route::put('update_request',[RequestController::class,'update']);

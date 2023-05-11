@@ -122,10 +122,10 @@ class RequestController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $user_id, $slide_id)   // chick if returnd state == true cnt ++ 
+    public function update(Request $request/*, $user_id, $slide_id*/)   // chick if returnd state == true cnt ++ 
     {
-        // $user_id = request()->user_id;
-        // $slide_id = request()->slide_id;
+        $user_id = request()->user_id;
+        $slide_id = request()->slide_id;
         $validatedData = $request->validate([   //method to validate the input data. This ensures that the data is in the correct format and meets any validation rules set for each field.
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date',
@@ -148,7 +148,7 @@ class RequestController extends Controller
         $updatedRequest = DB::table('requests')   //After all fields have been updated, the function retrieves the updated request from the database
             ->join('users', 'users.id', '=', 'requests.user_id')
             ->join('slides', 'slides.id', '=', 'requests.slide_id')
-            ->select('requests.id', 'users.name as user_name', 'slides.arabic_name as slide_name', 'requests.start_date', 'requests.end_date', 'requests.returnd_date', 'requests.notes', 'requests.returned_state', 'requests.request_state', 'requests.requested_at', 'requests.updated_at')
+            ->select('requests.user_id','requests.slide_id', 'users.name as user_name', 'slides.arabicName as slide_name', 'requests.start_date', 'requests.end_date', 'requests.returned_date', 'requests.notes', 'requests.returned_state', 'requests.request_state', 'requests.requested_at', 'requests.updated_at')
             ->where('requests.user_id', $user_id)
             ->where('requests.slide_id', $slide_id)
             ->first();
@@ -156,11 +156,11 @@ class RequestController extends Controller
         // Update slide count based on returned_state value
         $slide = DB::table('slides')->where('id', $slide_id)->first();
 
-        if ($updatedRequest->returned_state) {
-            DB::table('slides')->where('id', $slide_id)->update(['cont' => $slide->cont + 1]);
-        } else {
-            DB::table('slides')->where('id', $slide_id)->update(['cont' => $slide->cont - 1]);
-        }
+        // if ($updatedRequest->returned_state) {
+        //     DB::table('slides')->where('id', $slide_id)->update(['count' => $slide->cont + 1]);
+        // } else {
+        //     DB::table('slides')->where('id', $slide_id)->update(['count' => $slide->cont - 1]);
+        // }
         
 
             $currentRequestState = $updatedRequest->request_state;
