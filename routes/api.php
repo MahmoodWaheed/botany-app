@@ -23,7 +23,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::apiResource('users',UserController::class);
 Route::apiResource('slides',SlideController::class);
-Route::apiresource('requests', RequestController::class);
+Route::apiResource('requests', RequestController::class);
 Route::get('TotalUsers', [UserController::class, 'countUsers']);
 Route::put('accept_request',[RequestController::class,'acceptRequest']);
 Route::put('reject_request',[RequestController::class,'rejectRequest']);
