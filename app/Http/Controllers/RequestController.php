@@ -220,7 +220,7 @@ class RequestController extends Controller
             // send email if request is rejected
             $user = User::findOrFail($user_id);
             Mail::to($user->email)->send(new RequestRejected($user_id,$slide_id));
-            $this->destroy($user_id, $slide_id);  //i need to call the destroy function 
+            $this->destroy($request);  //i need to call the destroy function 
         
     }
 
@@ -230,8 +230,10 @@ class RequestController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($user_id, $slide_id)
+    public function destroy(Request $request/*$user_id, $slide_id*/)
     {
+        $user_id = request()->user_id;
+        $slide_id = request()->slide_id;
         $request = DB::table('requests')
             ->where('user_id', $user_id)
             ->where('slide_id', $slide_id)
