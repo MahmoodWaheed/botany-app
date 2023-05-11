@@ -35,7 +35,7 @@ class UserController extends Controller
             'phone' => 'required|string|max:45',
             'type' => 'required|string|max:45',
             'ssn' => 'required|string|max:45|unique:users,ssn',
-            'id' => 'required'
+            'id' => 'required|integer'
         ]);
     
         $user = User::create($validatedData);
