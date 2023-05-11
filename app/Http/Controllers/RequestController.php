@@ -26,7 +26,7 @@ class RequestController extends Controller
         ->select('users.id','users.email','users.name','slides.arabicName',
                 'slides.english_name','requests.requested_at','requests.updated_at',
                 'requests.end_date','requests.slide_id','requests.returned_state',
-                'requests.returned_date','requests.start_date')
+                'requests.returned_date','requests.start_date','requests.notes')
         ->get();
 
         return response()->json([
@@ -124,6 +124,8 @@ class RequestController extends Controller
      */
     public function update(Request $request, $user_id, $slide_id)   // chick if returnd state == true cnt ++ 
     {
+        // $user_id = request()->user_id;
+        // $slide_id = request()->slide_id;
         $validatedData = $request->validate([   //method to validate the input data. This ensures that the data is in the correct format and meets any validation rules set for each field.
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date',
@@ -137,8 +139,13 @@ class RequestController extends Controller
             ->where('user_id', $user_id)
             ->where('slide_id', $slide_id);
 
+        // foreach ($validatedData as $field => $value) {
+        //     $updateQuery->when($value !== null, function ($query) use ($field, $value) {
+        //         return $query->update([$field => $value]);
+        //     });
+
         foreach ($validatedData as $field => $value) {
-            $updateQuery->when($value !== null, function ($query) use ($field, $value) {
+            $updateQuery->when($value !== null || array_key_exists($field, $validatedData), function ($query) use ($field, $value) {
                 return $query->update([$field => $value]);
             });
         }
