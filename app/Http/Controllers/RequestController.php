@@ -143,6 +143,7 @@ class RequestController extends Controller
             $updateQuery->when($value !== null, function ($query) use ($field, $value) {
                 return $query->update([$field => $value]);
             });
+        }
 
         $updatedRequest = DB::table('requests')   //After all fields have been updated, the function retrieves the updated request from the database
             ->join('users', 'users.id', '=', 'requests.user_id')
