@@ -139,16 +139,10 @@ class RequestController extends Controller
             ->where('user_id', $user_id)
             ->where('slide_id', $slide_id);
 
-        // foreach ($validatedData as $field => $value) {
-        //     $updateQuery->when($value !== null, function ($query) use ($field, $value) {
-        //         return $query->update([$field => $value]);
-        //     });
-
         foreach ($validatedData as $field => $value) {
-            $updateQuery->when($value !== null || array_key_exists($field, $validatedData), function ($query) use ($field, $value) {
+            $updateQuery->when($value !== null, function ($query) use ($field, $value) {
                 return $query->update([$field => $value]);
             });
-        }
 
         $updatedRequest = DB::table('requests')   //After all fields have been updated, the function retrieves the updated request from the database
             ->join('users', 'users.id', '=', 'requests.user_id')
