@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -37,6 +38,8 @@ class UserController extends Controller
             'ssn' => 'required|string|max:45|unique:users,ssn',
             'id' => 'required|integer'
         ]);
+
+        // $validatedData['last_activity'] = Carbon::now(); // Set the last activity timestamp
     
         $user = User::create($validatedData);
         return response()->json($user, 201);  // we use user function to tell the front end that we already store this user 
@@ -57,6 +60,16 @@ class UserController extends Controller
             return response()->json(['message' => "User with ID $id not found."], 404);
         }
     }
+    /**
+     * Get the number of users currently using the app.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    // public function countActiveUsers()
+    // {
+    //     $count = User::where('last_activity', '>=', Carbon::now()->subMinutes(15))->count();
+    //     return response()->json(['Total Users' => $count], 200);
+    // }
 
     public function countUsers()
     {
