@@ -94,6 +94,7 @@ class UserController extends Controller
             'phone' => 'sometimes|string|max:45',
             'type' => 'sometimes|string|max:45',
             'ssn' => 'sometimes|string|max:45|unique:users,ssn',
+            'blocked'=>'sometimes|boolean',
         ]);
     
         $user->update($validatedData);
