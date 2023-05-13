@@ -85,21 +85,22 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, User $user)   //as findOrFail
-    {
-        $validatedData = $request->validate([
-            'name' => 'sometimes|string|max:45',
-            'password' => 'sometimes|string|max:45',
-            'email' => 'sometimes|string|email|max:45|unique:users,email',
-            'phone' => 'sometimes|string|max:45',
-            'type' => 'sometimes|string|max:45',
-            'ssn' => 'sometimes|string|max:45|unique:users,ssn',
-            'blocked'=>'sometimes|boolean',
-        ]);
-    
-        $user->update($validatedData);
-        return response()->json($user,203); 
-    }
+    public function update(Request $request, User $user)
+{
+    $validatedData = $request->validate([
+        'name' => 'sometimes|string|max:45',
+        'password' => 'sometimes|string|max:45',
+        'email' => 'sometimes|string|email|max:45|unique:users,email,' . $user->id . ',id',
+        'phone' => 'sometimes|string|max:45',
+        'type' => 'sometimes|string|max:45',
+        'ssn' => 'sometimes|string|max:45|unique:users,ssn,' . $user->id . ',id',
+        'blocked' => 'sometimes|boolean',
+    ]);
+
+    $user->update($validatedData);
+    return response()->json($user, 203);
+}
+
 
     /**
      * Remove the specified resource from storage.
