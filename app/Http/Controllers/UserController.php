@@ -95,6 +95,7 @@ class UserController extends Controller
             'type' => 'sometimes|string|max:45',
             'ssn' => 'sometimes|string|max:45|unique:users,ssn',
             'blocked'=>'sometimes|boolean',
+            'id' => 'required|integer' // only to be compatable with hagar jeson 
         ]);
     
         $user->update($validatedData);
