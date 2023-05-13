@@ -86,20 +86,27 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, User $user)
-{
-    $validatedData = $request->validate([
-        'name' => 'sometimes|string|max:45',
-        'password' => 'sometimes|string|max:45',
-        'email' => 'sometimes|string|email|max:45|unique:users,email,' . $user->id . ',id',
-        'phone' => 'sometimes|string|max:45',
-        'type' => 'sometimes|string|max:45',
-        'ssn' => 'sometimes|string|max:45|unique:users,ssn,' . $user->id . ',id',
-        'blocked' => 'sometimes|boolean',
-    ]);
+    {
+        $validatedData = $request->validate([
+            'name' => 'sometimes|string|max:45',
+            'password' => 'sometimes|string|max:45',
+            'email' => 'sometimes|string|email|max:45|unique:users,email,' . $user->id . ',id',
+            'phone' => [
+                'sometimes',
+                'string',
+                'regex:/^\+[1-9]\d{1,14}$/',
+                'max:45',
+                'unique:users,phone,' . $user->id . ',id',
+            ],
+            'type' => 'sometimes|string|max:45',
+            'ssn' => 'sometimes|string|max:45|unique:users,ssn,' . $user->id . ',id',
+            'blocked' => 'sometimes|boolean',
+        ]);
 
-    $user->update($validatedData);
-    return response()->json($user, 203);
-}
+        $user->update($validatedData);
+        return response()->json($user, 203);
+    }
+
 
 
     /**
