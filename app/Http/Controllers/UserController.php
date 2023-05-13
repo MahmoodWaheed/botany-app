@@ -33,7 +33,7 @@ class UserController extends Controller
             'name' => 'required|string|max:45',
             'password' => 'required|string|max:45',
             'email' => 'required|string|email|max:45|unique:users,email',
-            'phone' => 'required|string|max:45',
+            'phone' => 'required|string|max:45|unique:users,phone',
             'type' => 'required|string|max:45',
             'ssn' => 'required|string|max:45|unique:users,ssn',
             'id' => 'required|integer'
