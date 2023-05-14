@@ -94,7 +94,7 @@ class UserController extends Controller
             'phone' => [
                 'sometimes',
                 'string',
-                'regex:/^\+[1-9]\d{1,14}$/',
+                'regex:/^(?:\+?20|0)?1[0-9]{9}$/',
                 'max:45',
                 'unique:users,phone,' . $user->id . ',id',
             ],
