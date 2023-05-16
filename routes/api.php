@@ -25,6 +25,7 @@ Route::apiResource('users',UserController::class);
 Route::apiResource('slides',SlideController::class);
 Route::apiResource('requests', RequestController::class);
 Route::get('TotalUsers', [UserController::class, 'countUsers']);
+Route::get('getUserTypeByEmail', [UserController::class, 'getUserTypeByEmail']);
 Route::put('accept_request',[RequestController::class,'acceptRequest']);
 Route::put('reject_request',[RequestController::class,'rejectRequest']);
 Route::put('update_request',[RequestController::class,'update']);

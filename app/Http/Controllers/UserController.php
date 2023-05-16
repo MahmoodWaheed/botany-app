@@ -106,6 +106,21 @@ class UserController extends Controller
         $user->update($validatedData);
         return response()->json($user, 203);
     }
+    public function getUserTypeByEmail(Request $request)
+    {
+        $validatedData = $request->validate([
+            'email' => 'required|string|email|max:45',
+        ]);
+
+        $user = User::where('email', $validatedData['email'])->first();
+
+        if ($user) {
+            return response()->json(['user_type' => $user->type], 200);
+        } else {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+    }
+
 
 
 
