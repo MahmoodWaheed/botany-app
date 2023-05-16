@@ -115,7 +115,7 @@ class UserController extends Controller
         $user = User::where('email', $validatedData['email'])->first();
 
         if ($user) {
-            return response()->json(['user_type' => $user->type], 200);
+            return response()->json($user, 200);
         } else {
             return response()->json(['message' => 'User not found'], 404);
         }

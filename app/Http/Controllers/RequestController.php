@@ -46,8 +46,8 @@ class RequestController extends Controller
         $validatedData = $request->validate([
             'user_id' => 'required|integer',
             'slide_id' => 'required|integer',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date',
             'returned_date' => 'nullable|date',
             'notes' => 'nullable|string|max:255',
             'returned_state' => 'nullable|boolean',
