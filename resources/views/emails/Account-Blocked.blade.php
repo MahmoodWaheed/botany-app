@@ -1,4 +1,6 @@
 @component('mail::message')
+{{-- Custom Icon --}}
+<img src="{{ asset('icons/botany-icon.png') }}" alt="Botany Icon" width="50" height="50">
 # Account Blocked
 
 Dear {{ $user->name }},
