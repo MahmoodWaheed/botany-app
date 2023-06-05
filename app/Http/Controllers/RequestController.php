@@ -23,10 +23,22 @@ class RequestController extends Controller
         $requests = DB::table('requests')
         ->join('users', 'requests.user_id', '=', 'users.id')
         ->join('slides', 'requests.slide_id', '=', 'slides.id')
-        ->select('users.id','users.email','users.name','slides.arabicName',
-                'slides.english_name','requests.requested_at','requests.updated_at',
-                'requests.end_date','requests.slide_id','requests.returned_state',
-                'requests.returned_date','requests.start_date','requests.notes')
+        ->select(
+            'users.id',
+            'users.email',
+            'users.name',
+            'slides.arabicName',
+            'slides.english_name',
+            'requests.requested_at',
+            'requests.updated_at',
+            'requests.end_date',
+            'requests.slide_id',
+            'requests.returned_state',
+            'requests.returned_date',
+            'requests.start_date',
+            'requests.notes'
+        )
+        ->orderBy('requests.requested_at', 'desc')
         ->get();
 
         return response()->json([
@@ -57,15 +69,15 @@ class RequestController extends Controller
         DB::table('requests')->insert($validatedData);
 
         $request2 = DB::table('requests')
-            ->join('users', 'users.id', '=', 'requests.user_id')
-            ->join('slides', 'slides.id', '=', 'requests.slide_id')
-            ->select('users.name as user_name', 'slides.arabicName as slide_name', 'requests.start_date', 'requests.end_date', 'requests.returned_date', 'requests.notes', 'requests.returned_state', 'requests.request_state', 'requests.requested_at', 'requests.updated_at')
-            ->where([
-                ['requests.user_id', '=', $validatedData['user_id']],
-                ['requests.slide_id', '=', $validatedData['slide_id']],
-                ['requests.start_date', '=', $validatedData['start_date']],
-                ['requests.end_date', '=', $validatedData['end_date']],
-            ])
+        ->join('users', 'users.id', '=', 'requests.user_id')
+        ->join('slides', 'slides.id', '=', 'requests.slide_id')
+        ->select('users.name as user_name', 'slides.arabicName as slide_name', 'requests.start_date', 'requests.end_date', 'requests.returned_date', 'requests.notes', 'requests.returned_state', 'requests.request_state', 'requests.requested_at', 'requests.updated_at')
+        ->where([
+            ['requests.user_id', '=', $validatedData['user_id']],
+            ['requests.slide_id', '=', $validatedData['slide_id']],
+            ['requests.start_date', '=', $validatedData['start_date']],
+            ['requests.end_date', '=', $validatedData['end_date']],
+        ])
             ->first();
 
         $user = DB::table('users')->where('id', $validatedData['user_id'])->first();
@@ -179,6 +191,14 @@ class RequestController extends Controller
 
         return response()->json($updatedRequest);  // the function returns the updated request as a JSON response.
     }
+
+    public function getRequestCount()
+    {
+        $requestCount = DB::table('requests')->count();
+
+        return response()->json(['count' => $requestCount],200);
+    }
+
 
     public function acceptRequest(Request $request){
                

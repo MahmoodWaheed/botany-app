@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 05, 2023 at 03:07 PM
+-- Generation Time: Jun 05, 2023 at 03:07 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.1.12
 
@@ -141,13 +141,6 @@ CREATE TABLE `requests` (
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `requests`
---
-
-INSERT INTO `requests` (`user_id`, `slide_id`, `start_date`, `end_date`, `returned_date`, `notes`, `returned_state`, `request_state`, `requested_at`, `updated_at`) VALUES
-(3, 2, '2022-05-05', '2022-05-05', NULL, 'aa', NULL, 'approved', '2023-05-05 01:33:36', '2023-05-05 12:47:02');
-
 -- --------------------------------------------------------
 
 --
@@ -163,8 +156,10 @@ CREATE TABLE `request_archives` (
   `notes` text DEFAULT NULL,
   `returned_state` tinyint(4) DEFAULT NULL,
   `request_state` varchar(45) DEFAULT NULL,
-  `requested_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `requested_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `deleted_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -183,12 +178,12 @@ CREATE TABLE `section_types` (
 --
 
 INSERT INTO `section_types` (`other_id`, `SectionType`) VALUES
-(1, 'not found'),
-(2, 'not found'),
-(3, 'not found'),
-(4, 'not found'),
-(5, 'not found'),
-(6, 'not found'),
+(1, 'null'),
+(2, 'null'),
+(3, 'null'),
+(4, 'null'),
+(5, 'null'),
+(6, 'null'),
 (7, 'Gametophte'),
 (7, 'Gametophyte carrying sporophyte'),
 (7, 'Sorus'),
@@ -251,7 +246,7 @@ CREATE TABLE `slides` (
 --
 
 INSERT INTO `slides` (`id`, `arabicName`, `count`, `slide_number`, `cupbord`, `english_name`, `image`, `group_name`) VALUES
-(1, 'null', 100, 1, 1, 'null', NULL, 'Phycology'),
+(1, 'باتراخوسبرموم', 100, 1, 1, 'null', '', 'Phycology'),
 (2, 'كيتوفورا', 100, 2, 1, 'null', NULL, 'Phycology'),
 (3, 'كلادفورا', 100, 3, 1, 'null', NULL, 'Phycology'),
 (4, 'دياتومات', 100, 4, 1, 'null', NULL, 'Phycology'),
@@ -401,9 +396,36 @@ INSERT INTO `slide_ceils` (`id`, `ceil_name`) VALUES
 (1, 'x'),
 (2, 'x'),
 (3, 'y'),
-(4, 'y'),
-(5, 'z'),
-(6, 'z');
+(4, 'x'),
+(5, 'x'),
+(6, 'y'),
+(7, 'x'),
+(8, 'y'),
+(9, 'x'),
+(10, 'y'),
+(11, 'x'),
+(12, 'x'),
+(13, 'y'),
+(14, 'y'),
+(15, 'x'),
+(16, 'y'),
+(17, 'x'),
+(18, 'y'),
+(19, 'x'),
+(20, 'x'),
+(21, 'y'),
+(22, 'y'),
+(23, 'x'),
+(24, 'y'),
+(25, 'x'),
+(26, 'y'),
+(27, 'x'),
+(28, 'x'),
+(29, 'y'),
+(30, 'y'),
+(31, 'x'),
+(32, 'y'),
+(33, 'x');
 
 -- --------------------------------------------------------
 
@@ -426,7 +448,35 @@ INSERT INTO `slide_slide_ceils` (`slide_id`, `slide_ceils_id`) VALUES
 (3, 2),
 (4, 1),
 (5, 1),
-(28, 2);
+(5, 2),
+(6, 4),
+(7, 5),
+(8, 12),
+(9, 1),
+(10, 5),
+(11, 4),
+(12, 17),
+(13, 21),
+(14, 25),
+(15, 31),
+(16, 32),
+(17, 33),
+(18, 10),
+(19, 11),
+(20, 2),
+(21, 30),
+(22, 18),
+(23, 17),
+(24, 7),
+(25, 19),
+(26, 21),
+(27, 3),
+(28, 25),
+(29, 20),
+(30, 6),
+(31, 9),
+(32, 14),
+(33, 26);
 
 -- --------------------------------------------------------
 
@@ -465,7 +515,7 @@ CREATE TABLE `users` (
   `phone` varchar(45) NOT NULL,
   `type` varchar(45) NOT NULL,
   `ssn` varchar(45) NOT NULL,
-  `blocked` tinyint(4) DEFAULT NULL,
+  `blocked` tinyint(4) NOT NULL DEFAULT 0,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `email_verified_at` datetime DEFAULT NULL,
@@ -477,9 +527,10 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `password`, `email`, `phone`, `type`, `ssn`, `blocked`, `created_at`, `updated_at`, `email_verified_at`, `remember_token`) VALUES
-(3, 'Madyson Wyman', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'ethan.rempel@example.com', '(725) 722-5583', 'student', '4', NULL, '2023-04-25 16:41:00', '2023-04-25 16:41:00', '2023-04-25 18:41:00', 'WvVoVRF9eY'),
-(4, 'Prof. Buford Rolfson', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'dasia20@example.org', '(908) 656-6275', 'student', '6', NULL, '2023-04-25 16:42:00', '2023-04-25 16:42:00', '2023-04-25 18:42:00', 'NeLmnmphJk'),
-(5, 'Mrs. Golda Ortiz DVM', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'dickinson.tierra@example.net', '+13615571493', 'student', '6', NULL, '2023-04-25 22:00:00', '2023-04-25 22:00:00', '2023-04-26 00:00:00', 'hHaBRpj410');
+(1, 'Mahmoud waheed', '123456789', 'mahmoud.waheed.moh@gmail.com', '0123456789', 'doctor', '01234567891234', 0, '2023-04-30 21:00:00', '2023-05-01 21:00:00', NULL, NULL),
+(2, 'Hagar Abdelaliem', '123456789', 'yaom.200011@gmail.com', '0123456789', 'student', '01478523691234', 0, '2023-04-30 21:00:00', '2023-05-01 21:00:00', NULL, NULL),
+(3, 'Rehab Hamdy', '123456789', 'rehab123selim@gmail.com', '0123456789', 'student', '03698521479517', 0, '2023-04-30 21:00:00', '2023-05-01 21:00:00', NULL, NULL),
+(4, 'Rehab Hamy Mohamed', '123456789', 'rehab.hamdy.selim@gmail.com', '0123456789', 'admain', '01478528527894', 0, '2023-04-30 21:00:00', '2023-05-04 21:00:00', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -526,7 +577,7 @@ ALTER TABLE `requests`
 -- Indexes for table `request_archives`
 --
 ALTER TABLE `request_archives`
-  ADD PRIMARY KEY (`slides_id`,`users_id`),
+  ADD PRIMARY KEY (`id`,`users_id`,`slides_id`),
   ADD KEY `fk_slides_has_users_users2_idx` (`users_id`),
   ADD KEY `fk_slides_has_users_slides2_idx` (`slides_id`);
 
@@ -595,6 +646,12 @@ ALTER TABLE `migrations`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `request_archives`
+--
+ALTER TABLE `request_archives`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `slides`
 --
 ALTER TABLE `slides`
@@ -604,7 +661,7 @@ ALTER TABLE `slides`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Constraints for dumped tables
