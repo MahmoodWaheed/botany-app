@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -38,6 +39,7 @@ class UserController extends Controller
             'ssn' => 'required|string|max:45|unique:users,ssn',
             'id' => 'required|integer'
         ]);
+        // $validatedData['password'] = Hash::make($validatedData['password']); hassing the password
 
         // $validatedData['last_activity'] = Carbon::now(); // Set the last activity timestamp
     
@@ -102,6 +104,9 @@ class UserController extends Controller
             'ssn' => 'sometimes|string|max:45|unique:users,ssn,' . $user->id . ',id',
             'blocked' => 'sometimes|boolean',
         ]);
+        // if (isset($validatedData['password'])) {
+        //     $validatedData['password'] = Hash::make($validatedData['password']);  hashing the password
+        // }
 
         $user->update($validatedData);
         return response()->json($user, 203);
